@@ -2,7 +2,7 @@
 #include <list>
 
 int main(int argc, char *argv[]) {
-  FILE *input = fopen("input", "r");
+  FILE *input = fopen("day-1-input.txt", "r");
   if (!input) return 1;
 
   std::list<int64_t> expenses;
