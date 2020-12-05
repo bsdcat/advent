@@ -31,9 +31,13 @@ int main(int argc, char *argv[]) {
   }
 
   int my_assignment = 0;
-  for (int i = 1; i < 127; ++i) {
+  for (int i = 0; i < 128; ++i) {
     if (assignments[i] < 255) {
       for (int j = 0; j < 8; ++j) {
+        if (i == 0 && j == 0)
+          continue;
+        if (i == 127 && j == 7)
+          continue;
         if ((assignments[i] & (1 << j)) == 0) {
           if (j == 0 && (assignments[i-1] & (1 << 7)) == 0)
             continue;
