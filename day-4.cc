@@ -53,15 +53,8 @@ bool valid_hcl(char *value) {
 
 bool valid_ecl(char *value) {
   printf("ecl:%s ", value);
-  if (strcmp(value, "amb") == 0 ||
-      strcmp(value, "blu") == 0 ||
-      strcmp(value, "brn") == 0 ||
-      strcmp(value, "gry") == 0 ||
-      strcmp(value, "grn") == 0 ||
-      strcmp(value, "hzl") == 0 ||
-      strcmp(value, "oth") == 0)
-    return true;
-  return false;
+  static std::set<std::string> colors = { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
+  return colors.find(value) != colors.end();
 }
 
 bool valid_pid(char *value) {
