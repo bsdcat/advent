@@ -74,17 +74,27 @@ int main(int argc, char *argv[]) {
 
   char line[256];
   bool eof = false;
-  int count = 0;
+  int count_1 = 0;
+  int count_2 = 0;
   while (!eof) {
-    bool hgt = false;
-    bool iyr = false;
-    bool ecl = false;
-    bool eyr = false;
-    bool byr = false;
-    bool hcl = false;
-    bool pid = false;
-    bool cid = false;
-    bool valid = false;
+    bool hgt_1 = false;
+    bool iyr_1 = false;
+    bool ecl_1 = false;
+    bool eyr_1 = false;
+    bool byr_1 = false;
+    bool hcl_1 = false;
+    bool pid_1 = false;
+    bool cid_1 = false;
+    bool valid_1 = false;
+    bool hgt_2 = false;
+    bool iyr_2 = false;
+    bool ecl_2 = false;
+    bool eyr_2 = false;
+    bool byr_2 = false;
+    bool hcl_2 = false;
+    bool pid_2 = false;
+    bool cid_2 = false;
+    bool valid_2 = false;
 
     while (true) {
       for (int i = 0; i < 256; ++i) {
@@ -109,36 +119,58 @@ int main(int argc, char *argv[]) {
         std::string key = entry;
         std::string value = entry + offset + 1;
 
-        if (key == "hgt")
-          hgt = valid_hgt(value);
-        if (key == "iyr")
-          iyr = valid_iyr(value);
-        if (key == "ecl")
-          ecl = valid_ecl(value);
-        if (key == "eyr")
-          eyr = valid_eyr(value);
-        if (key == "byr")
-          byr = valid_byr(value);
-        if (key == "hcl")
-          hcl = valid_hcl(value);
-        if (key == "pid")
-          pid = valid_pid(value);
+        if (key == "hgt") {
+          hgt_1 = true;
+          hgt_2 = valid_hgt(value);
+        }
+        if (key == "iyr") {
+          iyr_1 = true;
+          iyr_2 = valid_iyr(value);
+        }
+        if (key == "ecl") {
+          ecl_1 = true;
+          ecl_2 = valid_ecl(value);
+        }
+        if (key == "eyr") {
+          eyr_1 = true;
+          eyr_2 = valid_eyr(value);
+        }
+        if (key == "byr") {
+          byr_1 = true;
+          byr_2 = valid_byr(value);
+        }
+        if (key == "hcl") {
+          hcl_1 = true;
+          hcl_2 = valid_hcl(value);
+        }
+        if (key == "pid") {
+          pid_1 = true;
+          pid_2 = valid_pid(value);
+        }
         if (key == "cid") {
-          cid = true;
+          cid_1 = true;
+          cid_2 = true;
           printf("cid:%s ", value.c_str());
         }
       }
 
-      if (hgt && iyr && ecl && eyr && byr && hcl && pid) {
-        if (!valid)
-          count++;
-        valid = true;
+      if (hgt_1 && iyr_1 && ecl_1 && eyr_1 && byr_1 && hcl_1 && pid_1) {
+        if (!valid_1)
+          count_1++;
+        valid_1 = true;
+      }
+
+      if (hgt_2 && iyr_2 && ecl_2 && eyr_2 && byr_2 && hcl_2 && pid_2) {
+        if (!valid_2)
+          count_2++;
+        valid_2 = true;
         printf("valid");
       }
     }
   }
 
-  printf("valid passports = %d\n", count);
+  printf("passports with enough fields = %d\n", count_1);
+  printf("valid passports = %d\n", count_2);
 
   return 0;
 }
