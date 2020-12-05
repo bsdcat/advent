@@ -3,34 +3,34 @@
 #include <set>
 #include <string>
 
-bool valid_byr(char *value) {
-  printf("byr:%s ", value);
-  int byr = atoi(value);
+bool valid_byr(const std::string &value) {
+  printf("byr:%s ", value.c_str());
+  int byr = std::stoi(value);
   if (byr < 1920 || byr > 2002)
     return false;
   return true;
 }
 
-bool valid_iyr(char *value) {
-  printf("iyr:%s ", value);
-  int iyr = atoi(value);
+bool valid_iyr(const std::string &value) {
+  printf("iyr:%s ", value.c_str());
+  int iyr = std::stoi(value);
   if (iyr < 2010 || iyr > 2020)
     return false;
   return true;
 }
 
-bool valid_eyr(char *value) {
-  printf("eyr:%s ", value);
-  int eyr = atoi(value);
+bool valid_eyr(const std::string &value) {
+  printf("eyr:%s ", value.c_str());
+  int eyr = std::stoi(value);
   if (eyr < 2020 || eyr > 2030)
     return false;
   return true;
 }
 
-bool valid_hgt(char *value) {
-  printf("hgt:%s ", value);
-  size_t len = strlen(value);
-  int height = atoi(value);
+bool valid_hgt(const std::string &value) {
+  printf("hgt:%s ", value.c_str());
+  size_t len = value.length();
+  int height = std::stoi(value);
   if (value[len-2] == 'c' && value[len-1] == 'm' && height >= 150 && height <= 193)
     return true;
   if (value[len-2] == 'i' && value[len-1] == 'n' && height >= 59 && height <= 76)
@@ -38,9 +38,9 @@ bool valid_hgt(char *value) {
   return false;
 }
 
-bool valid_hcl(char *value) {
-  printf("hcl:%s ", value);
-  if (strlen(value) != 7)
+bool valid_hcl(const std::string &value) {
+  printf("hcl:%s ", value.c_str());
+  if (value.length() != 7)
     return false;
   if (value[0] != '#')
     return false;
@@ -51,15 +51,15 @@ bool valid_hcl(char *value) {
   return true;
 }
 
-bool valid_ecl(char *value) {
-  printf("ecl:%s ", value);
+bool valid_ecl(const std::string &value) {
+  printf("ecl:%s ", value.c_str());
   static std::set<std::string> colors = { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
   return colors.find(value) != colors.end();
 }
 
-bool valid_pid(char *value) {
-  printf("pid:%s ", value);
-  if (strlen(value) != 9)
+bool valid_pid(const std::string &value) {
+  printf("pid:%s ", value.c_str());
+  if (value.length() != 9)
     return false;
   for (int i = 0; i < 9; i++) {
     if (value[i] < '0' || value[i] > '9')
@@ -102,31 +102,30 @@ int main(int argc, char *argv[]) {
       }
       
       line[255] = '\0';
-      char key[32] = {0};
-      char value[32] = {0};
-      if (sscanf(line, "%s:%s", key, value) > 0) {
-        size_t offset = strcspn(key, ":");
-        key[offset] = '\0';
-        strcpy(value, key + offset + 1);
-        //printf("KEY: '%s' VALUE: '%s' ", key, value);
+      char entry[64] = {0};
+      if (sscanf(line, "%s", entry) > 0) {
+        size_t offset = strcspn(entry, ":");
+        entry[offset] = '\0';
+        std::string key = entry;
+        std::string value = entry + offset + 1;
 
-        if (strcmp(key, "hgt") == 0)
+        if (key == "hgt")
           hgt = valid_hgt(value);
-        if (strcmp(key, "iyr") == 0)
+        if (key == "iyr")
           iyr = valid_iyr(value);
-        if (strcmp(key, "ecl") == 0)
+        if (key == "ecl")
           ecl = valid_ecl(value);
-        if (strcmp(key, "eyr") == 0)
+        if (key == "eyr")
           eyr = valid_eyr(value);
-        if (strcmp(key, "byr") == 0)
+        if (key == "byr")
           byr = valid_byr(value);
-        if (strcmp(key, "hcl") == 0)
+        if (key == "hcl")
           hcl = valid_hcl(value);
-        if (strcmp(key, "pid") == 0)
+        if (key == "pid")
           pid = valid_pid(value);
-        if (strcmp(key, "cid") == 0) {
+        if (key == "cid") {
           cid = true;
-          printf("cid:%s ", value);
+          printf("cid:%s ", value.c_str());
         }
       }
 
