@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
           eof = true;
           break;
         }
-        if (line[i] == '\n' || line[i] == '\t' || line[i] == ' ')
+        if (isspace(line[i]))
           break;
       }
       if (eof || line[0] == '\n') {
