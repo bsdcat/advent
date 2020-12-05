@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
     fgetc(input);
   }
 
-  printf("trees = %lld\n",
+  printf("part 1 trees = %lld\n", trees_for_angle(rows, 3, 1));
+  printf("part 2 trees = %lld\n",
          trees_for_angle(rows, 1, 1) *
          trees_for_angle(rows, 3, 1) *
          trees_for_angle(rows, 5, 1) *
