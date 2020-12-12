@@ -15,6 +15,54 @@ enum op {
   
 typedef std::pair<op, int> op_val;
 
+bool run_sim(std::vector<op_val> &ram_ops, int flip_index) {
+  std::set<int> indices;
+  int acc = 0;
+  int index = 0;
+
+  while (true) {
+    if (indices.find(index) != indices.end()) {
+      if (flip_index == -1)
+        printf("accumulator is %d\n", acc);
+      return false;
+    }
+
+    indices.insert(index);
+    if (index < 0) {
+      printf("got impossible index %d\n", index);
+      return false;
+    }
+
+    if (static_cast<size_t>(index) >= ram_ops.size()) {
+      printf("got to exit, accumulator is %d\n", acc);
+      return true;
+    }
+
+    op an_op = ram_ops[index].first;
+    int val = ram_ops[index].second;
+    if (index == flip_index) {
+      if (an_op == op::JMP)
+        an_op = op::NOOP;
+      else if (an_op == op::NOOP)
+        an_op = op::JMP;
+    }
+
+    switch(an_op) {
+    case op::JMP:
+      index += val;
+      break;
+    case op::ACC:
+      acc += val;
+    case op::NOOP:
+      index++;
+      break;
+    case op::OP_UNSPECIFIED:
+      printf("that broke\n");
+      exit(1);
+    }
+  }
+}
+
 int main(int argc, char *argv[]) {
   std::ifstream input = std::ifstream("day-8-input.txt");
   if (!input.is_open())
@@ -40,30 +88,11 @@ int main(int argc, char *argv[]) {
   }
 
   std::vector<op_val> ram_ops = std::vector<op_val>(ops.begin(), ops.end());
-  std::set<size_t> indices;
-  int acc = 0;
-  size_t index = 0;
 
-  while (true) {
-    if (indices.find(index) != indices.end()) {
-      printf("accumulator is %d\n", acc);
+  run_sim(ram_ops, -1);
+  for (int i = 0; i < ram_ops.size(); ++i) {
+    if (run_sim(ram_ops, i))
       break;
-    }
-
-    indices.insert(index);
-    switch(ram_ops[index].first) {
-    case op::JMP:
-      index += ram_ops[index].second;
-      break;
-    case op::ACC:
-      acc += ram_ops[index].second;
-    case op::NOOP:
-      index++;
-      break;
-    case op::OP_UNSPECIFIED:
-      printf("that broke\n");
-      return 1;
-    }
   }
   
   return 0;
